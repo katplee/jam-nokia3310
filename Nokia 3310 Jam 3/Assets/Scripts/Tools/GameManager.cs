@@ -1,11 +1,12 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class GameManager : Singleton<GameManager>
-{
-    private KeyCode[] codes =
+{    
+    private List<KeyCode> codes = new List<KeyCode>()
     {
         KeyCode.Z,
         KeyCode.X,
@@ -18,14 +19,17 @@ public class GameManager : Singleton<GameManager>
         KeyCode.E
     };
 
-    void Start()
+    public static event Action<KeyCode> ActionKeyPress;
+
+    private void OnGUI()
     {
-        
-    }
+        Event e = Event.current;
 
-    void Update()
-    {
+        if (e.isKey)
+        {
+            if (!codes.Contains(e.keyCode)) { return; }
 
-    }   
-
+            ActionKeyPress?.Invoke(e.keyCode);
+        }
+    } 
 }

@@ -7,6 +7,8 @@ using UnityEngine.Tilemaps;
 
 public class AStarAlgorithm : MonoBehaviour
 {
+    //Credits to inScope Studios for the A* Search algorithm tutorial and implementation.
+
     [SerializeField] private Tilemap playerWalkablePath;
     private Dictionary<Vector3Int, AStarNode> nodeRegister;
     private Vector3Int startPosition;
@@ -187,15 +189,13 @@ public class AStarAlgorithm : MonoBehaviour
 
     private void ClearData()
     {
-
+        nodeRegister = null;
+        startPosition = Vector3Int.zero;
+        currentNode = null;
+        destination = Vector3Int.zero;
+        openList = null;
+        closedList = null;
+        finalPath = null;
+        declarationDone = false;        
     }
-
-    //Do not forget to include a Clear method to erase all data that are present.
-    //Erase current.
-    //Erase finalPath.
-    //
-
-
-
-
 }

@@ -1,17 +1,22 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class PlayerWalkableNode : MonoBehaviour
 {
     //A label attached to all nodes that are walkable.
-    //Generate the WorldToTile dictionary using these nodes.
+    //Generate the DestinationToTransform dictionary using these nodes.
 
-    void Start()
+    [SerializeField] private Tilemap playerWalkablePath;
+    [SerializeField] private PlayerWalkableNodeList walkableNodeList;
+
+    private void Start()
     {
-        //ADD NODE TO PLAYER POSITION DICTIONARY
-        //POSITION IS SENT IN TERMS OF CELL POSITION
-        //Vector3Int nodeTilePos = Tilemap.Instance.playerTileMap.WorldToCell(transform.position);
-        //GameManager.Instance.playerPosition.Add(gameObject.name, nodeTilePos);
+        //Add node to player position dictionary
+        //Position is sent in terms of cell position
+
+        Vector3Int nodePosition = playerWalkablePath.WorldToCell(transform.position);
+        walkableNodeList.destinationToTransform.Add(gameObject.name, nodePosition);           
     }
 }
