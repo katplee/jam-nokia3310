@@ -7,18 +7,18 @@ public class KeyPressedToAction : MonoBehaviour
 {
     //Will contain list of corresponding methods which contain player actions.
 
-    public static event Action<Vector3Int> MovePlayer;
+    public static event Action<Vector3Int, string> MovePlayer;
 
     [SerializeField] private PlayerWalkableNodeList nodeList;
 
     private void Start()
     {   
-        GameManager.ActionKeyPress += ActionCheck;
+        Input.ActionKeyPress += ActionCheck;
     }
 
     private void OnDestroy()
     {
-        GameManager.ActionKeyPress -= ActionCheck;
+        Input.ActionKeyPress -= ActionCheck;
     }
 
     private void ActionCheck(KeyCode actionKey)
@@ -27,7 +27,10 @@ public class KeyPressedToAction : MonoBehaviour
         {
             //Tasks relating to the bed
             case KeyCode.Q:
-                MovePlayer?.Invoke(GoTo("Bed"));
+                MovePlayer?.Invoke(GoTo("Bed"), "Bed");
+                break;
+            case KeyCode.W:
+                MovePlayer?.Invoke(GoTo("Desk_Oven"), "Desk_Oven");
                 break;
 
             default:
@@ -45,6 +48,6 @@ public class KeyPressedToAction : MonoBehaviour
 
     public void Testing()
     {
-        MovePlayer?.Invoke(new Vector3Int(-7, -1, 0));
+        MovePlayer?.Invoke(new Vector3Int(-7, -1, 0), "Test");
     }
 }

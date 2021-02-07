@@ -9,9 +9,10 @@ public class PlayerMovement : MonoBehaviour
     //Contains code that gives movement to the player.
     //Leads player to the destination depending on the key/squence of keys pressed.
 
+    [SerializeField] private bool isSetToMove = false;
     public static event Action ReadyToCompute;
     public static event Action DoneComputing;
-    [SerializeField] private bool isSetToMove = false;
+    public static event Action<string> ReadyToAnimate;
 
     [SerializeField] private AStarAlgorithm aStar;
 
@@ -19,7 +20,9 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private PlayerStep step;
     private Vector3Int currentPlayerPosition; //covers the starting position of the player
     private Vector3Int destination;
+    private string destinationName = null;
     private Stack<Vector3Int> computedPath;
+
 
     private void Start()
     {        
@@ -31,10 +34,11 @@ public class PlayerMovement : MonoBehaviour
         KeyPressedToAction.MovePlayer -= SetDestination;
     }
 
-    private void SetDestination(Vector3Int destination)
+    private void SetDestination(Vector3Int destination, string destinationName)
     {
         isSetToMove = true;
         this.destination = destination;
+        this.destinationName = destinationName;
         ComputePathToDestination();
     }
 
@@ -60,6 +64,9 @@ public class PlayerMovement : MonoBehaviour
         if (Vector3Int.Distance(destination, playerPosition) < 0.1f)
         {
             isSetToMove = false;
+            ReadyToAnimate?.Invoke(destinationName);
+            //Call some method to do the corresponding animation based on the position of the player.
+            //Do not forget the clear method.   
         }
         else
         {
@@ -79,5 +86,5 @@ public class PlayerMovement : MonoBehaviour
         }
 
         step.SetDestination(computedPath.Peek());
-    }
+    }  
 }
