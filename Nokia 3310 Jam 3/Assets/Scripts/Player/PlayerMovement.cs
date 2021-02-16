@@ -18,9 +18,10 @@ public class PlayerMovement : MonoBehaviour
 
     [SerializeField] private Tilemap playerWalkablePath;
     [SerializeField] private PlayerStep step;
+    [SerializeField] private PlayerDestination playerDestination = null;
     private Vector3Int currentPlayerPosition; //covers the starting position of the player
     private Vector3Int destination;
-    private string destinationName = null;
+    [SerializeField] private string destinationName = null;
     private Stack<Vector3Int> computedPath;
 
 
@@ -34,11 +35,12 @@ public class PlayerMovement : MonoBehaviour
         KeyPressedToAction.MovePlayer -= SetDestination;
     }
 
-    private void SetDestination(Vector3Int destination, string destinationName)
+    private void SetDestination(Vector3Int destination, string destinationName, int actionCode)
     {
         isSetToMove = true;
         this.destination = destination;
         this.destinationName = destinationName;
+        playerDestination.SetStatus(actionCode);
         ComputePathToDestination();
     }
 

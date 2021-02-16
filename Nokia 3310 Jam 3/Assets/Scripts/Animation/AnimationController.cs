@@ -5,11 +5,14 @@ using UnityEngine;
 
 public class AnimationController : MonoBehaviour
 {
+    public static event Action AnimationDone;
+
+    [SerializeField] private PlayerDestination playerDestination = null;
+
     [SerializeField] private GameObject playerGO = null;
     private Animator objectAnimator = null;
 
     private bool isAnimating = false;
-    private float animationTime = 7f;
     private float runningTime;
     private float animationEndTime;
 
@@ -40,20 +43,24 @@ public class AnimationController : MonoBehaviour
     {
         if (gameObject.name != destinationName) { return; }
 
+        string actionCode = playerDestination.GetPlayerAction().ToString();
+        int code = playerDestination.GetPlayerAction();
+
         //Hide the player's game object.
         playerGO.SetActive(false);
 
         //Do the animation.
-        objectAnimator.SetBool("Animate", true);
+        objectAnimator.SetBool(actionCode, true);
 
-        SetTimers();
-
+        SetTimers(code);
     }
 
     private void EndAnimate()
     {
+        string actionCode = playerDestination.GetPlayerAction().ToString();
+
         //Remove the animation.
-        objectAnimator.SetBool("Animate", false);
+        objectAnimator.SetBool(actionCode, false);
 
         if (!objectAnimator.GetCurrentAnimatorStateInfo(0).IsName("Default")) { return; }
 
@@ -61,13 +68,39 @@ public class AnimationController : MonoBehaviour
         playerGO.SetActive(true);
 
         ClearTimers();
+        AnimationDone?.Invoke();
     }
 
-    private void SetTimers()
-    {
+    private void SetTimers(int actionCode)
+    {        
         isAnimating = true;
         runningTime = Time.time;
-        animationEndTime = runningTime + animationTime;
+        animationEndTime = runningTime + CheckAnimationTime(actionCode);
+    }
+
+    private float CheckAnimationTime(int actionCode)
+    {
+        switch (actionCode)
+        {
+            case 0:
+                return 7;
+            case 1:
+            case 5:
+                return 4;
+            case 2:
+                return 3;
+            case 3:
+                return 1;
+            case 4:
+                return 8;
+            case 6:
+            case 7:
+            case 8:
+            case 9:
+                return 5;                
+            default:
+                return 0;
+        }
     }
 
     private void ClearTimers()
